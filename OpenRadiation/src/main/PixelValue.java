@@ -4,19 +4,19 @@ import java.awt.image.Raster;
 import java.io.IOException;
 
 import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 
 import fr.openradiation.image.Dng;
-import fr.openradiation.image.Img;
 
 public class PixelValue {
 
-	public static void main(String[] args) throws IOException, ImageProcessingException {
+	public static void main(String[] args) throws IOException, ImageProcessingException, MetadataException {
 		/**
 		 * Change files paths here
 		 */
 		
 		String pathIn = "C:/Users/Pierre/Desktop/tableau.dng";
-		String pathOut = "C:/Users/sncuser/Desktop/tableau_bis.png";
+		//String pathOut = "C:/Users/sncuser/Desktop/tableau_bis.png";
 
 		Dng img = new Dng(pathIn, "titre");
 		System.out.println(img.toString());

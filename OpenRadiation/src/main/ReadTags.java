@@ -8,7 +8,6 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 public class ReadTags {
 	
@@ -26,8 +25,8 @@ public class ReadTags {
 		int nbrTag = 0;
 		
 		for (Directory directory : metadata.getDirectories()) {
+			System.out.println(directory.getName());
 			if(directory.containsTag(50706)){
-				
 				System.out.println(directory.getIntArray(50706)[0]+" "+directory.getIntArray(50706)[1]);
 			}
 		    for (Tag tag : directory.getTags()) {
@@ -37,6 +36,7 @@ public class ReadTags {
 		    }
 		    System.out.println(nbrTag);
 		}
+
 	}
 
 }
