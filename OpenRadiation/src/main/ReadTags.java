@@ -8,15 +8,28 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 public class ReadTags {
+	
+	/**
+	 * includes a lot of examples and test
+	 * @param args
+	 * @throws ImageProcessingException
+	 * @throws IOException
+	 */
 
 	public static void main(String[] args) throws ImageProcessingException, IOException {
-		String pathIn = "C:/Users/sncuser/Desktop/calella2.dng";
+		String pathIn = "C:/Users/Pierre/Desktop/tableau.dng";
 		File jpegFile = new File(pathIn);
 		Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
 		int nbrTag = 0;
+		
 		for (Directory directory : metadata.getDirectories()) {
+			if(directory.containsTag(50706)){
+				
+				System.out.println(directory.getIntArray(50706)[0]+" "+directory.getIntArray(50706)[1]);
+			}
 		    for (Tag tag : directory.getTags()) {
 		        System.out.println(tag);  
 		        //System.out.println(tag.getTagType());

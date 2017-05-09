@@ -3,15 +3,22 @@ package main;
 import java.awt.image.Raster;
 import java.io.IOException;
 
+import com.drew.imaging.ImageProcessingException;
+
+import fr.openradiation.image.Dng;
 import fr.openradiation.image.Img;
 
 public class PixelValue {
 
-	public static void main(String[] args) throws IOException {
-		String pathIn = "C:/Users/sncuser/Desktop/tableau.dng";
+	public static void main(String[] args) throws IOException, ImageProcessingException {
+		/**
+		 * Change files paths here
+		 */
+		
+		String pathIn = "C:/Users/Pierre/Desktop/tableau.dng";
 		String pathOut = "C:/Users/sncuser/Desktop/tableau_bis.png";
 
-		Img img = new Img(pathIn, "titre");
+		Dng img = new Dng(pathIn, "titre");
 		System.out.println(img.toString());
 
 		Raster raster = img.getBI().getRaster();
@@ -27,8 +34,8 @@ public class PixelValue {
 		System.out.println("max : "+img.getMax());
 		System.out.println("min : "+img.getMin());
 		
-		img.convertToPng(pathOut);
-
+		//img.convertToPng(pathOut);
+		
     }
 
 	

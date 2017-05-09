@@ -6,24 +6,31 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Metadata;
+
 public class Img {
 
 	String path, nom;
 	int W, H, type;
 	BufferedImage buff;
+	Metadata metadata;
 
-	public Img(String path, String nom) throws IOException{
+	public Img(String path, String nom) throws IOException, ImageProcessingException{
 		this.path=path;
 		this.nom=nom;
+		this.metadata = ImageMetadataReader.readMetadata(new File(path));
 		this.buff=ImageIO.read(new File(path));
 		this.W=this.buff.getWidth();
 		this.H=this.buff.getHeight();
 		this.type=this.buff.getType();
 	}
 
-	public Img(File file) throws IOException{
+	public Img(File file) throws IOException, ImageProcessingException{
 		this.path="";
 		this.nom="";
+		this.metadata = ImageMetadataReader.readMetadata(new File(path));
 		this.buff=ImageIO.read(file);
 		this.W=this.buff.getWidth();
 		this.H=this.buff.getHeight();
