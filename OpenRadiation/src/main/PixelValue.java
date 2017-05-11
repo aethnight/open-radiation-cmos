@@ -15,8 +15,9 @@ public class PixelValue {
 		 * Change files paths here
 		 */
 		
-		String pathIn = "C:/Users/Pierre/Desktop/tableau.dng";
+		String pathIn = "C:/Users/sncuser/Desktop/tableau.dng";
 		//String pathOut = "C:/Users/sncuser/Desktop/tableau_bis.png";
+		//String pathOut = "C:/Users/Pierre/Desktop/tableau_bis.png";
 
 		Dng img = new Dng(pathIn, "titre");
 		System.out.println(img.toString());
