@@ -35,7 +35,7 @@ public class PixelValue {
 		System.out.println("max : "+img.getMax());
 		System.out.println("min : "+img.getMin());
 		
-		//img.convertToPng(pathOut);
+		///img.convertToPng(pathOut);
 		
     }
 
