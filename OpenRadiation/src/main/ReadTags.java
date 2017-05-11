@@ -2,6 +2,7 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -19,20 +20,19 @@ public class ReadTags {
 	 */
 
 	public static void main(String[] args) throws ImageProcessingException, IOException {
-		String pathIn = "C:/Users/Pierre/Desktop/tableau.dng";
+		String pathIn = "C:/Users/sncuser/Desktop/calella1.dng";
 		File jpegFile = new File(pathIn);
 		Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
 		int nbrTag = 0;
 		
 		for (Directory directory : metadata.getDirectories()) {
 			System.out.println(directory.getName());
-			if(directory.containsTag(50706)){
-				System.out.println(directory.getIntArray(50706)[0]+" "+directory.getIntArray(50706)[1]);
-			}
 		    for (Tag tag : directory.getTags()) {
 		        System.out.println(tag);  
-		        //System.out.println(tag.getTagType());
 		        nbrTag+=1;    
+		    }
+		    if(directory.containsTag(256)){
+		    	System.out.println(directory.getObject(256));
 		    }
 		    System.out.println(nbrTag);
 		}

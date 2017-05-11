@@ -14,8 +14,9 @@ public class PixelValue {
 		/**
 		 * Change files paths here
 		 */
-		
-		String pathIn = "C:/Users/sncuser/Desktop/tableau.dng";
+
+		String pathIn = "C:/Users/sncuser/Desktop/bleu.dng";
+		String pathOut = "C:/Users/sncuser/Desktop/GROSTEST.png";
 		//String pathOut = "C:/Users/sncuser/Desktop/tableau_bis.png";
 		//String pathOut = "C:/Users/Pierre/Desktop/tableau_bis.png";
 
@@ -32,12 +33,12 @@ public class PixelValue {
 			}
 		}
 
-		System.out.println("max : "+img.getMax());
-		System.out.println("min : "+img.getMin());
-		
-		///img.convertToPng(pathOut);
-		
-    }
+		//img.convertToPng(pathOut);
+		//img.convertToPngTrueRGB(pathOut);
 
-	
+
+
+	}
+
+
 }
