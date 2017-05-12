@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -14,6 +15,9 @@ import com.drew.metadata.MetadataException;
 public class Dng extends Img {
 	double version, whitelevel;
 	long blacklevel;
+	short[] blrd; //black level repeat dim
+	short SPP; //sample per pixel
+	Vector<short[]> BL; //black level
 
 	public Dng(File file) throws IOException, ImageProcessingException, MetadataException {
 		super(file);
@@ -29,6 +33,19 @@ public class Dng extends Img {
 			}
 			if(directory.containsTag(50714)){	
 				this.blacklevel = (long) Array.get(directory.getObject(50714),0);
+			}
+			if(directory.containsTag(277)){
+				this.SPP = (short)Array.get(directory.getObject(277),0);
+			}
+			if(directory.containsTag(50713)){
+				this.blrd[0] = (short) Array.get(directory.getObject(50713),0);
+				this.blrd[1] = (short) Array.get(directory.getObject(50713),1);
+				if(directory.containsTag(50714)){
+					for(int i=0;i<this.SPP*this.blrd[0]*this.blrd[1];i++){
+						
+					}
+					
+				}
 			}
 		}
 	}
@@ -54,11 +71,11 @@ public class Dng extends Img {
 	public void setVersion(double version){
 		this.version = version;
 	}
-	
+
 	public void setWhiteLevel(int wl){
 		this.whitelevel = wl;
 	}
-	
+
 	public void setBlackLevel(long wb){
 		this.blacklevel = wb;
 	}
@@ -66,23 +83,22 @@ public class Dng extends Img {
 	public double getVersion(){
 		return this.version;
 	}
-	
+
 	public double getWhiteLevel(){
 		return this.whitelevel;
 	}
-	
+
 	public long getBlackLevel(){
 		return this.blacklevel;
 	}
-	
+
 	public String toString(){
-		return "Fichier DNG version "+this.getVersion()+", white level = "+this.whitelevel+" , blacklevel = "+this.blacklevel;
+		return "Fichier DNG version "+this.getVersion()+", white level = "+this.whitelevel+" , blacklevel = "+this.blacklevel+" "+super.toString();
 	}
 
 	public void convertToPng(String pathOut){
 		try{
 			BufferedImage buffO = new BufferedImage(this.getW(), this.getH(), BufferedImage.TYPE_INT_RGB);
-
 			File outputfile = new File(pathOut);
 			int r = 0;
 			int g = 0;
@@ -91,8 +107,6 @@ public class Dng extends Img {
 			int col = (r << 16) | (g << 8) | b;
 			System.out.println("conversion to RGB");
 			double[] res = new double[1];
-
-
 			for(int i=0; i < this.getH();i++){
 				for(int j=0; j<this.getW();j++ ){
 					color =(int) this.getBI().getRaster().getPixel(j, i, res)[0];
@@ -103,7 +117,6 @@ public class Dng extends Img {
 					//buffO.setRGB(this.getH()-1-i, j, col);
 					buffO.setRGB(j, i, col);
 				}	
-
 			}
 			System.out.println("écriture");
 			ImageIO.write(buffO, "PNG", outputfile);
@@ -127,8 +140,6 @@ public class Dng extends Img {
 			int col = (r << 16) | (g << 8) | b;
 			System.out.println("conversion to RGB non demosaifié");
 			double[] res = new double[1];
-
-
 			for(int i=0; i < this.getH();i++){
 				for(int j=0; j<this.getW();j++ ){
 					color =(int) this.getBI().getRaster().getPixel(j, i, res)[0];
@@ -148,12 +159,9 @@ public class Dng extends Img {
 						r = 0;
 						g = color/4;
 						b = 0;
-
 					}
 					col = (r << 16) | (g << 8) | b;
-					//buffO.setRGB(this.getH()-1-i, j, col); //remettre à l'endroit
 					buffO.setRGB(i, j, col);
-
 				}
 			}	
 			System.out.println("écriture");
@@ -173,7 +181,6 @@ public class Dng extends Img {
 			int r = 0;
 			int g = 0;
 			int b = 0;
-			int color = 0;
 			int col = (r << 16) | (g << 8) | b;
 			System.out.println("conversion to RGB demosaifié");
 			for(int i=4; i < this.getH()-8;i++){
@@ -194,7 +201,6 @@ public class Dng extends Img {
 						r = (this.getColor(j+1, i)+this.getColor(j-1, i))/8;
 						g = (this.getColor(j-1, i-1)+this.getColor(j+1, i+1)+this.getColor(j-1, i+1)+this.getColor(j+1, i-1)+this.getColor(j, i))/20;
 						b = (this.getColor(j, i+1)+this.getColor(j, i-1))/8;
-
 					}
 					else{//green on second line
 						r = (this.getColor(j, i+1)+this.getColor(j, i-1))/8;
@@ -202,9 +208,7 @@ public class Dng extends Img {
 						b = (this.getColor(j+1, i)+this.getColor(j-1, i))/8;
 					}
 					col = (r << 16) | (g << 8) | b;
-					//buffO.setRGB(this.getH()-1-i, j, col); //remettre à l'endroit
 					buffO.setRGB(j, i, col);
-
 				}
 			}	
 			System.out.println("écriture");
