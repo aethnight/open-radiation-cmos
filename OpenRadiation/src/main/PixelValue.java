@@ -48,11 +48,11 @@ public class PixelValue {
 		int[] histo = new int[1024];
 		int[][] av = new int[2464][3280];
 		double[] res = new double[1];
-		for(int i = 8;i<48;i++){
+		for(int i = 53;i<54;i++){
 			if(i<10){
-				PathIn = "C:/Users/sncuser/Desktop/firstBurst/DSC_000"+i+".DNG";
+				PathIn = "G:/IRSN-STAGE/100_CFV5/old/DSC_000"+i+".DNG";
 			}
-			else{PathIn = "C:/Users/sncuser/Desktop/firstBurst/DSC_00"+i+".DNG";}
+			else{PathIn = "G:/IRSN-STAGE/100_CFV5/old/DSC_00"+i+".DNG";}
 			dng = new Dng(PathIn, "titre");
 			raster = dng.getBI().getRaster();
 			for(int a=0; a < dng.getH();a++){ //2464
@@ -62,21 +62,26 @@ public class PixelValue {
 					if(value>=seuil){
 						count+=1;
 					}
-				}
+				}	
 			}
+			//dng.convertToPng("G:/IRSN-STAGE/im_out_"+i+".png");
 			System.out.println(dng.getAv());
 		}
 		System.out.println(count);
 		try{
-			File ff=new File("C:/Users/sncuser/Desktop/output.txt"); // définir l'arborescence
+			File ff=new File("G:/IRSN-STAGE/output.txt"); // définir l'arborescence
 			ff.createNewFile();
 			FileWriter ffw=new FileWriter(ff);
 			for(int k=0;k<1024;k++){
-				ffw.write(Integer.toString(histo[k]));  // écrire une ligne dans le fichier resultat.txt
+				if(histo[k]!=0){
+					ffw.write(Integer.toString(histo[k]));
+				}
+				else{ffw.write(Integer.toString(-1));}  // écrire une ligne dans le fichier resultat.txt
 				ffw.write("\n"); // forcer le passage à la ligne
 			}
 			ffw.close(); // fermer le fichier à la fin des traitements
 			} catch (Exception e) {}
+		
 	}
 
 
