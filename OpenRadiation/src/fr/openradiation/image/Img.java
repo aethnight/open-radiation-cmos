@@ -63,9 +63,17 @@ public class Img {
 	public BufferedImage getBI(){
 		return this.buff;
 	}
+	
+	public String getSType(){
+		return this.s_type;
+	}
 
 	public String toString(){
 		return "Longueur = "+this.getW()+" px, hauteur = "+this.getH()+" px, type "+this.getType();
+	}
+	
+	public void setBI(BufferedImage Bi){
+		this.buff=Bi;
 	}
 
 	private String defineType(int i){

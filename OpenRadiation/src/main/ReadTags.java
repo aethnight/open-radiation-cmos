@@ -20,7 +20,7 @@ public class ReadTags {
 	 */
 
 	public static void main(String[] args) throws ImageProcessingException, IOException {
-		String pathIn = "G:/IRSN-STAGE/100_CFV5/old/DSC_0054.DNG";
+		String pathIn = "G:/IRSN-STAGE/100_CFV5/old/DSC_0053.DNG";
 		File jpegFile = new File(pathIn);
 		Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
 		int nbrTag = 0;

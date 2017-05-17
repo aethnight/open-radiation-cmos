@@ -42,9 +42,9 @@ public class Dng extends Img {
 				this.blrd[1] = (short) Array.get(directory.getObject(50713),1);
 				if(directory.containsTag(50714)){
 					for(int i=0;i<this.SPP*this.blrd[0]*this.blrd[1];i++){
-						
+
 					}
-					
+
 				}
 			}
 		}
@@ -105,7 +105,7 @@ public class Dng extends Img {
 			int b = 0;
 			int color = 0;
 			int col = (r << 16) | (g << 8) | b;
-			System.out.println("conversion to RGB");
+			System.out.println("conversion to grey RGB");
 			double[] res = new double[1];
 			for(int i=0; i < this.getH();i++){
 				for(int j=0; j<this.getW();j++ ){
@@ -187,25 +187,25 @@ public class Dng extends Img {
 				for(int j=4; j<this.getW()-8;j++ ){
 					if(i%2==0 && j%2==0){
 						//red
-						r=this.getColor(j, i)/4;
-						g=(this.getColor(j, i-1)+this.getColor(j, i+1)+this.getColor(j-1, i)+this.getColor(j+1, i))/16;
-						b=(this.getColor(j-1, i-1)+this.getColor(j+1, i+1)+this.getColor(j-1, i+1)+this.getColor(j+1, i-1))/16;
+						r=(int) (this.getColor(j, i)[0]/4.0);
+						g=(int) ((this.getColor(j, i-1)[0]+this.getColor(j, i+1)[0]+this.getColor(j-1, i)[0]+this.getColor(j+1, i)[0])/16.0);
+						b=(int) ((this.getColor(j-1, i-1)[0]+this.getColor(j+1, i+1)[0]+this.getColor(j-1, i+1)[0]+this.getColor(j+1, i-1)[0])/16.0);
 					}
 					else if(i%2==1 && j%2==1){
 						//blue
-						r=(this.getColor(j-1, i-1)+this.getColor(j+1, i+1)+this.getColor(j-1, i+1)+this.getColor(j+1, i-1))/16;
-						g=(this.getColor(j, i-1)+this.getColor(j, i+1)+this.getColor(j-1, i)+this.getColor(j+1, i))/16;
-						b=this.getColor(j, i)/4;
+						r=(int) ((this.getColor(j-1, i-1)[0]+this.getColor(j+1, i+1)[0]+this.getColor(j-1, i+1)[0]+this.getColor(j+1, i-1)[0])/16.0);
+						g=(int) ((this.getColor(j, i-1)[0]+this.getColor(j, i+1)[0]+this.getColor(j-1, i)[0]+this.getColor(j+1, i)[0])/16.0);
+						b=(int) (this.getColor(j, i)[0]/4);
 					}
 					else if(i%2==0 && j%2==1){//green of first line
-						r = (this.getColor(j+1, i)+this.getColor(j-1, i))/8;
-						g = (this.getColor(j-1, i-1)+this.getColor(j+1, i+1)+this.getColor(j-1, i+1)+this.getColor(j+1, i-1)+this.getColor(j, i))/20;
-						b = (this.getColor(j, i+1)+this.getColor(j, i-1))/8;
+						r = (int) ((this.getColor(j+1, i)[0]+this.getColor(j-1, i)[0])/8.0);
+						g = (int) ((this.getColor(j-1, i-1)[0]+this.getColor(j+1, i+1)[0]+this.getColor(j-1, i+1)[0]+this.getColor(j+1, i-1)[0]+this.getColor(j, i)[0])/20.0);
+						b = (int) ((this.getColor(j, i+1)[0]+this.getColor(j, i-1)[0])/8);
 					}
 					else{//green on second line
-						r = (this.getColor(j, i+1)+this.getColor(j, i-1))/8;
-						g = (this.getColor(j-1, i-1)+this.getColor(j+1, i+1)+this.getColor(j-1, i+1)+this.getColor(j+1, i-1)+this.getColor(j, i))/20;
-						b = (this.getColor(j+1, i)+this.getColor(j-1, i))/8;
+						r = (int) ((this.getColor(j, i+1)[0]+this.getColor(j, i-1)[0])/8);
+						g = (int) ((this.getColor(j-1, i-1)[0]+this.getColor(j+1, i+1)[0]+this.getColor(j-1, i+1)[0]+this.getColor(j+1, i-1)[0]+this.getColor(j, i)[0])/20.0);
+						b = (int) ((this.getColor(j+1, i)[0]+this.getColor(j-1, i)[0])/8);
 					}
 					col = (r << 16) | (g << 8) | b;
 					buffO.setRGB(j, i, col);
@@ -219,12 +219,26 @@ public class Dng extends Img {
 		}
 		System.out.println("done");
 	}
-
-	public int getColor(int x, int y){
-		double[] res = new double[1];
-		return (int) this.getBI().getRaster().getPixel(x, y, res)[0];
+	/**
+	 * 
+	 * @param x coordonnee pixel
+	 * @param y coordonnee pixel
+	 * @return int, premiere valeur de l'array d'un pixel, la valeur de gris pour un ushort grey, pas definie pour les autres
+	 */
+	public double[] getColor(int x, int y){
+		double[] res = new double[3];
+		double[] tmp = new double[10];
+		if(this.getSType()=="TYPE_USHORT_GRAY"){
+			res[0] = this.getBI().getRaster().getPixel(x, y, tmp)[0];
+		}
+		else{res[0]=-1.0;}
+		return res;
 	}
-
+	/**
+	 * 
+	 * @param x
+	 * @return la valeur transpose en 8 bits.
+	 */
 	public int convertTo8bits(int x){
 		double Vmax = this.getWhiteLevel()+1;
 		double bit = 0.0;
@@ -233,5 +247,43 @@ public class Dng extends Img {
 			bit+=1.0;
 		}
 		return (int)(x*Math.pow(2, 8.0-bit));
+	}
+
+	/**
+	 * 
+	 * @param buffI
+	 * @param noise
+	 * @return retranche le bruit et recreer un imageredbuffer
+	 */
+	public BufferedImage noiseMinus(BufferedImage buffI,double[][] noise){
+		BufferedImage buffO = new BufferedImage(buffI.getWidth(), buffI.getHeight(), BufferedImage.TYPE_USHORT_GRAY);
+		int[] value = new int[1] ;
+		double[] res = new double[1];
+		for(int i=0;i<buffO.getHeight();i++){
+			for(int j=0;j<buffO.getWidth();j++){
+				value[0]=(int) (buffI.getRaster().getPixel(j, i, res)[0]- noise[i][j]);
+				if(value[0]<=0){
+					value[0]=0;
+				}
+				buffO.getRaster().setPixel(j, i, value);
+			}
+		}
+
+		return buffO;
+	}
+
+	/**
+	 * 
+	 * @return un tableau de valeur, valable pour le moment pour le ushort grey
+	 */
+	public double[][] extractValue(){
+		double[][] res = new double[this.getH()][this.getW()];
+		double[] res2 = new double[1];
+		for(int i=0;i<this.getH();i++){
+			for(int j=0;j<this.getW();j++){
+				res[i][j]=(int) (this.getBI().getRaster().getPixel(j, i, res2)[0]);
+			}
+		}
+		return res;
 	}
 }
